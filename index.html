@@ -1,0 +1,345 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OneCharge EV – Fast EV Charging in Laos</title>
+<meta name="description" content="OneCharge EV – fast EV charging stations across Laos. Open 24 hours, free parking, pay in the OneCharge EV app.">
+<link rel="icon" href="images/mark.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Noto+Sans+Lao:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css">
+<style>.pin{width:20px;height:20px;border-radius:50%;background:#2fa83a;border:3px solid #fff;box-shadow:0 1px 4px rgba(0,0,0,.4);cursor:pointer}.pin.soon{background:#e0a100}.maplibregl-popup-content{font:14px Inter,"Noto Sans Lao",sans-serif;padding:12px 14px}</style>
+<style>
+:root{--g:#2fa83a;--gd:#1d7a29;--gl:#e9f7ea;--ink:#16211a;--mut:#5b6b60;--bg:#fff;--card:#f6f9f6;--line:#dfe8e0}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,"Noto Sans Lao",system-ui,sans-serif;color:var(--ink);background:var(--bg);line-height:1.6}
+html[lang=lo] body{font-family:"Noto Sans Lao",Inter,sans-serif}
+a{color:var(--gd)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:1000;background:#fff;border-bottom:1px solid var(--line)}
+.nav{display:flex;align-items:center;gap:16px;height:64px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:800;text-decoration:none;color:var(--ink);font-size:18px}
+.brand img{width:40px;height:40px}
+.links{display:flex;gap:18px;margin-left:auto}
+.links a{text-decoration:none;color:var(--ink);font-weight:600;font-size:15px}
+.links a:hover{color:var(--g)}
+.lang{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden}
+.lang button{border:0;background:none;padding:6px 12px;cursor:pointer;font:inherit;font-size:13px}
+.lang button.on{background:var(--g);color:#fff}
+.hero{position:relative;color:#fff;min-height:560px;display:flex;align-items:center;background:radial-gradient(circle at 80% 40%,#2fa83a 0%,#14551d 45%,#081a0c 100%);overflow:hidden}
+.hero .wrap{display:grid;grid-template-columns:1.3fr 1fr;gap:30px;align-items:center;width:100%}
+.hero .logo-big{justify-self:center;width:min(300px,70%);aspect-ratio:1;border-radius:50%;background:#fff;display:grid;place-items:center;box-shadow:0 0 0 18px rgba(255,255,255,.08),0 0 0 40px rgba(255,255,255,.04)}
+.hero .logo-big img{width:82%}
+.iconbox{border-radius:16px;aspect-ratio:4/3;background:linear-gradient(135deg,var(--gl),#fff);border:1px solid var(--line);display:grid;place-items:center}
+.two .iconbox img{width:38%;aspect-ratio:1;border-radius:0}
+.photos div{aspect-ratio:1;border-radius:12px;background:var(--gl);display:grid;place-items:center;text-align:center;font-size:40px;padding:10px}
+.photos div span{display:block;font-size:13px;font-weight:600;color:var(--gd)}
+#mapfb{display:none;width:100%;height:460px;border:0;border-radius:16px}
+.hero .wrap{position:relative}
+.tag{display:inline-block;background:var(--g);padding:4px 12px;border-radius:999px;font-size:13px;font-weight:600}
+h1{font-size:clamp(34px,6vw,58px);line-height:1.1;margin:16px 0}
+.hero p{font-size:19px;max-width:560px;opacity:.92}
+.btn{display:inline-block;background:var(--g);color:#fff;text-decoration:none;padding:13px 24px;border-radius:10px;font-weight:700;margin:8px 8px 0 0}
+.btn.ghost{background:transparent;border:2px solid #fff}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:-48px;position:relative}
+.stat{background:#fff;border-radius:14px;padding:22px;box-shadow:0 8px 28px rgba(0,0,0,.09);text-align:center}
+.stat b{display:block;font-size:34px;color:var(--g)}
+.stat span{color:var(--mut);font-size:14px}
+section{padding:80px 0}
+section.alt{background:var(--card)}
+h2{font-size:clamp(28px,4vw,38px);margin:0 0 8px}
+.lead{color:var(--mut);font-size:18px;max-width:700px;margin:0 0 36px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:26px}
+.alt .card{border:0;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+.ic{width:46px;height:46px;border-radius:12px;background:var(--gl);display:grid;place-items:center;font-size:24px;margin-bottom:12px}
+.card h3{margin:0 0 6px;font-size:19px}
+.card p{margin:0;color:var(--mut)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:40px;align-items:center}
+.two img{width:100%;border-radius:16px;aspect-ratio:4/3;object-fit:cover}
+.ticks{list-style:none;padding:0}
+.ticks li{padding:6px 0 6px 30px;position:relative}
+.ticks li:before{content:"✓";position:absolute;left:0;color:#fff;background:var(--g);width:20px;height:20px;border-radius:50%;font-size:12px;display:grid;place-items:center;top:9px}
+#map{height:460px;border-radius:16px;border:1px solid var(--line)}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 16px}
+.filters button{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;cursor:pointer;font:inherit;font-size:14px}
+.filters button.on{background:var(--g);border-color:var(--g);color:#fff}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px;margin-top:20px}
+.st{background:#fff;border:1px solid var(--line);border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.st b{display:block;font-size:15px}
+.st small{color:var(--mut)}
+.st a{font-size:13px;white-space:nowrap;text-decoration:none;font-weight:600}
+.soonb{background:#fff4d6;color:#8a5a00;font-size:12px;padding:2px 8px;border-radius:6px;font-weight:600}
+.photos{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:28px}
+.photos img{width:100%;aspect-ratio:1;object-fit:cover;border-radius:12px}
+.deal{background:linear-gradient(135deg,var(--g),var(--gd));color:#fff;border-radius:18px;padding:28px;position:relative;overflow:hidden}
+.deal .badge{display:inline-block;background:rgba(255,255,255,.2);padding:3px 10px;border-radius:999px;font-size:12px;font-weight:700;margin-bottom:10px}
+.deal h3{margin:0 0 6px;font-size:22px}
+.deal p{margin:0;opacity:.92}
+.deal .big{font-size:40px;font-weight:800;line-height:1.1;margin:6px 0}
+.price td,.price th{padding:12px 14px;border-bottom:1px solid var(--line);text-align:left}
+.price{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;margin-top:24px}
+.price th{background:var(--gl)}
+.road{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.step{border-top:4px solid var(--g);background:#fff;border-radius:12px;padding:20px}
+.step.f{border-color:#c8d5ca}
+.step em{font-style:normal;color:var(--g);font-weight:800;font-size:14px}
+.model{text-align:center}
+.model .big{font-size:42px;font-weight:800;color:var(--g)}
+.fbanner{background:#fff;border-top:4px solid var(--g);padding:28px 0}
+.fbanner img{display:block;width:100%;max-width:760px;height:auto;margin:0 auto}
+.tblwrap{overflow-x:auto;margin-top:20px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.sttbl{width:100%;border-collapse:collapse;min-width:560px;font-size:15px}
+.sttbl th{background:var(--g);color:#fff;text-align:left;padding:12px 14px;font-weight:600}
+.sttbl td{padding:11px 14px;border-bottom:1px solid var(--line);vertical-align:middle}
+.sttbl tr.grp td{background:var(--gl);font-weight:800;color:var(--gd)}
+.sttbl tr:hover td{background:#fafdfa}
+.sttbl td.c{text-align:center}
+.dirbtn{display:inline-flex;align-items:center;gap:6px;background:var(--g);color:#fff!important;text-decoration:none;padding:7px 12px;border-radius:8px;font-weight:600;font-size:14px;white-space:nowrap}
+.dirbtn:hover{background:var(--gd)}
+.dirbtn svg{width:16px;height:16px;fill:#fff}
+.ok{color:var(--gd);font-weight:600}
+.appsec{background:linear-gradient(135deg,#0f3d17,#1d7a29);color:#fff;padding:64px 0}
+.appsec .wrap{display:grid;grid-template-columns:1.1fr 1fr;gap:40px;align-items:center}
+.appsec h2{color:#fff}.appsec .lead{color:#d6f0d9}
+.here{display:inline-block;background:#ffd23f;color:#1b1b1b;font-weight:800;padding:4px 14px;border-radius:999px;font-size:14px;letter-spacing:.5px;margin-bottom:12px}
+.qrs{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.qr{background:#fff;border-radius:18px;padding:18px;text-align:center;color:var(--ink);box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.qr img{width:100%;max-width:190px;aspect-ratio:1;image-rendering:pixelated;display:block;margin:0 auto 10px}
+.qr b{display:block;font-size:16px}
+.qr small{color:var(--mut);display:block;margin-bottom:10px}
+.store{display:inline-flex;align-items:center;gap:8px;background:#111;color:#fff!important;text-decoration:none;padding:9px 14px;border-radius:10px;font-weight:600;font-size:14px}
+.store svg{width:18px;height:18px;fill:#fff}
+@media(max-width:860px){.appsec .wrap{grid-template-columns:1fr}}
+@media(max-width:420px){.qrs{gap:10px}.qr{padding:12px}}
+footer{background:#0f1c12;color:#cfe0d2;padding:56px 0 30px}
+footer .two{align-items:start}
+footer a{color:#9be3a3}
+.small{font-size:13px;opacity:.7;margin-top:34px}
+@media(max-width:860px){.hero .wrap{grid-template-columns:1fr}.hero .logo-big{width:160px}.links{display:none}.grid,.road{grid-template-columns:1fr 1fr}.two{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}.photos{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:560px){.grid,.road{grid-template-columns:1fr}.hero{min-height:480px}section{padding:56px 0}}
+</style>
+</head>
+<body>
+<header><div class="wrap nav">
+  <a class="brand" href="#top"><img src="images/mark.png" alt="OneCharge EV logo">OneCharge EV</a>
+  <nav class="links">
+    <a href="#about" data-t="nav_about">About</a><a href="#stations" data-t="nav_st">Stations</a><a href="#app" data-t="nav_app">App</a>
+    <a href="#deals" data-t="nav_deals">Deals</a><a href="#future" data-t="nav_future">Our Plan</a>
+    <a href="#partner" data-t="nav_partner">Partner</a><a href="#contact" data-t="nav_contact">Contact</a>
+  </nav>
+  <div class="lang"><button data-l="en" class="on">EN</button><button data-l="lo">ລາວ</button><button data-l="zh">中文</button></div>
+</div></header>
+
+<div class="hero" id="top"><div class="wrap"><div>
+  <span class="tag" data-t="hero_tag">⚡ Open 24 hours · Free parking</span>
+  <h1 data-t="hero_h">Fast EV charging across Laos</h1>
+  <p data-t="hero_p">OneCharge EV builds and runs DC fast-charging stations at petrol stations, cafes, markets and transport hubs – so every EV driver in Laos can charge with confidence.</p>
+  <a class="btn" href="#stations" data-t="hero_b1">Find a station</a><a class="btn ghost" href="#app" data-t="hero_b3">Get the app</a>
+  </div>
+  <div class="logo-big"><img src="images/mark.png" alt="OneCharge EV"></div>
+</div></div>
+
+<div class="wrap stats">
+  <div class="stat"><b>22</b><span data-t="s1">Stations open</span></div>
+  <div class="stat"><b>108</b><span data-t="s2">Charging plugs</span></div>
+  <div class="stat"><b>180,000+</b><span data-t="s3">Charges completed</span></div>
+  <div class="stat"><b>5</b><span data-t="s4">Provinces</span></div>
+</div>
+
+
+<section class="appsec" id="app"><div class="wrap">
+  <div>
+    <span class="here" data-t="app_here">HERE! OUR APP</span>
+    <h2 data-t="app_h">Get the OneCharge EV app</h2>
+    <p class="lead" data-t="app_p">Scan now to download the app from the store. Find chargers, see live status, top up your wallet and start charging – all from your phone.</p>
+    <p data-t="app_tip" style="color:#d6f0d9;font-size:14px">📱 On your phone? Tap the store button under each code.</p>
+  </div>
+  <div class="qrs">
+    <div class="qr"><img src="images/qr-appstore.png" alt="QR code – OneCharge EV on the App Store"><b>iPhone</b><small>App Store</small>
+      <a class="store" target="_blank" rel="noopener" href="https://apps.apple.com/us/app/onecharge-ev/id6743433908"><svg viewBox="0 0 24 24"><path d="M16.4 12.6c0-2.6 2.1-3.8 2.2-3.9-1.2-1.8-3.1-2-3.7-2-1.6-.2-3.1.9-3.9.9-.8 0-2-.9-3.4-.9-1.7 0-3.3 1-4.2 2.6-1.8 3.1-.5 7.7 1.3 10.2.8 1.2 1.8 2.6 3.1 2.5 1.3-.1 1.7-.8 3.2-.8s1.9.8 3.2.8c1.3 0 2.2-1.2 3-2.5.9-1.4 1.3-2.8 1.3-2.9-.1 0-2.1-.8-2.1-4zM13.9 4.9c.7-.8 1.2-2 1-3.1-1 .1-2.2.7-2.9 1.5-.6.7-1.2 1.9-1 3 1.1.1 2.2-.6 2.9-1.4z"/></svg>App Store</a></div>
+    <div class="qr"><img src="images/qr-playstore.png" alt="QR code – OneCharge EV on Google Play"><b>Android</b><small>Google Play</small>
+      <a class="store" target="_blank" rel="noopener" href="https://play.google.com/store/apps/details?id=chaolaidian.com"><svg viewBox="0 0 24 24"><path d="M3.6 1.8c-.3.3-.4.7-.4 1.2v18c0 .5.1.9.4 1.2l10-10.2-10-10.2zm11.1 11.3 2.8 2.9-11.6 6.6 8.8-9.5zm0-2.2L5.9 1.4l11.6 6.6-2.8 2.9zm3.9-2.2 3.2 1.8c.9.5.9 1.5 0 2l-3.2 1.8-3-3 3-2.6z"/></svg>Google Play</a></div>
+  </div>
+</div></section>
+<section id="about"><div class="wrap two">
+  <div>
+    <h2 data-t="ab_h">About OneCharge EV</h2>
+    <p class="lead" data-t="ab_p">One Charge New Energy and Technology Sole Co., Ltd. is a Lao company based in Vientiane. Our goal is green energy for transport: fast EV charging stations that help Laos move from imported fuel to clean, home-grown electricity.</p>
+    <ul class="ticks">
+      <li data-t="ab_1">Official partner in Laos of TELD New Energy and GAC Energy Technology, two leading Chinese charging makers</li>
+      <li data-t="ab_2">Our own OneCharge EV app – find a charger, top up, charge and pay</li>
+      <li data-t="ab_3">Payment through Lao banks: BCEL One and LDB</li>
+      <li data-t="ab_4">Our own team installs, monitors and maintains every charger</li>
+    </ul>
+  </div>
+  <div class="iconbox"><img src="images/mark.png" alt="OneCharge EV"></div>
+</div></section>
+
+<section class="alt" id="what"><div class="wrap">
+  <h2 data-t="wd_h">What we do</h2>
+  <p class="lead" data-t="wd_p">From one charger at a café to a full charging hub – we handle the technology end-to-end.</p>
+  <div class="grid">
+    <div class="card"><div class="ic">⚡</div><h3 data-t="w1h">Public fast charging</h3><p data-t="w1p">DC fast chargers (120–160 kW per unit, GB/T standard) for cars, open 24 hours a day.</p></div>
+    <div class="card"><div class="ic">📱</div><h3 data-t="w2h">OneCharge EV app</h3><p data-t="w2p">Charging map, live charger status, wallet top-up, charge history – in Lao, English and Chinese.</p></div>
+    <div class="card"><div class="ic">🤝</div><h3 data-t="w3h">Site partnerships</h3><p data-t="w3p">We place chargers at petrol stations, cafés, markets, schools and bus stations, and share the income with the site owner.</p></div>
+    <div class="card"><div class="ic">🏢</div><h3 data-t="w4h">Charging hubs</h3><p data-t="w4p">Group DC chargers from 240 kW up to 960 kW, with up to 24 plugs from one power cabinet – for malls and transport hubs.</p></div>
+    <div class="card"><div class="ic">🚌</div><h3 data-t="w5h">Bus & truck charging</h3><p data-t="w5p">1 MW automatic charging systems for electric buses and freight trucks, for fleets going electric.</p></div>
+    <div class="card"><div class="ic">🛠️</div><h3 data-t="w6h">Installation & care</h3><p data-t="w6p">Site survey, transformer permits, installation, app connection and ongoing maintenance.</p></div>
+  </div>
+</div></section>
+
+<section id="stations"><div class="wrap">
+  <h2 data-t="st_h">Our stations</h2>
+  <p class="lead" data-t="st_p">Every station is open 24 hours with free parking. Tap a pin for directions.</p>
+  <div class="filters" id="filters"></div>
+  <div id="map"></div><iframe id="mapfb" loading="lazy" title="map"></iframe>
+  <div id="list"></div>
+  <!-- Icon tiles: replace any <div> with <img src="images/your-photo.jpg"> later -->
+  <div class="photos">
+    <div>⛽<span>Petrol stations</span></div><div>☕<span>Cafés</span></div>
+    <div>🛒<span>Markets & malls</span></div><div>🚉<span>Bus & rail</span></div><div>🏫<span>Schools</span></div>
+  </div>
+</div></section>
+
+<section class="alt" id="deals"><div class="wrap">
+  <h2 data-t="dl_h">Deals & promotions</h2>
+  <p class="lead" data-t="dl_p">Simple, fair pricing – and more reasons to charge with us.</p>
+  <div class="grid" id="deallist"></div>
+  <table class="price">
+    <tr><th data-t="pr_a">Area</th><th data-t="pr_b">Price per kWh</th><th data-t="pr_c">Includes</th></tr>
+    <tr><td data-t="pr_1">Vientiane Capital & Vang Vieng</td><td><b>2,999 ₭</b></td><td data-t="pr_x">Electricity + service fee</td></tr>
+    <tr><td data-t="pr_2">Thakhek, Pakse, Savannakhet</td><td><b>3,999 ₭</b></td><td data-t="pr_x">Electricity + service fee</td></tr>
+  </table>
+</div></section>
+
+<section id="future"><div class="wrap">
+  <h2 data-t="fu_h">Where we are going</h2>
+  <p class="lead" data-t="fu_p">Our goal: 30 stations in 2026, then charging along every main road in Laos – from the China border to the south.</p>
+  <div class="road">
+    <div class="step"><em>2025</em><h3 data-t="r1h">First stations</h3><p data-t="r1p">Vientiane railway station, Sanjiang Sinopec, Dongdok, highway entrance, Vang Vieng.</p></div>
+    <div class="step"><em>2026 · <span data-t="now">now</span></em><h3 data-t="r2h">22 stations open</h3><p data-t="r2p">Vientiane, Vang Vieng, Thakhek and Pakse. Savannakhet opens December 2026.</p></div>
+    <div class="step f"><em data-t="next">Next</em><h3 data-t="r3h">North & tourism route</h3><p data-t="r3p">Luang Prabang, Luang Namtha (Boten border) and Bokeo.</p></div>
+    <div class="step f"><em data-t="next">Next</em><h3 data-t="r4h">Hubs & fleets</h3><p data-t="r4p">Wattay International Airport, charging hubs, and bus & truck charging for fleets.</p></div>
+  </div>
+</div></section>
+
+<section class="alt" id="partner"><div class="wrap">
+  <h2 data-t="pa_h">Put a charger at your business</h2>
+  <p class="lead" data-t="pa_p">Do you own a petrol station, café, hotel, market or parking lot? EV drivers wait at your business while they charge – that means new customers for you. Choose the model that suits you:</p>
+  <div class="grid">
+    <div class="card model"><div class="big">80 / 20</div><h3 data-t="m1h">We invest most</h3><p data-t="m1p">OneCharge EV holds 80%. We supply the chargers, the app, permits, installation and maintenance. You provide the site.</p></div>
+    <div class="card model"><div class="big">50 / 50</div><h3 data-t="m2h">Invest together</h3><p data-t="m2p">Share the investment and share the income equally. We still run the technology and the app.</p></div>
+    <div class="card model"><div class="big">100%</div><h3 data-t="m3h">Become an agent</h3><p data-t="m3p">Buy the full charger set and own your station. We connect it to the OneCharge EV app and look after it.</p></div>
+  </div>
+  <p style="margin-top:28px"><a class="btn" href="#contact" data-t="pa_b">Talk to us about a site</a></p>
+</div></section>
+
+<div class="fbanner"><div class="wrap"><img src="images/header-banner.png" alt="One Charge New Energy and Technology Sole Co., Ltd – Sibounhueang Village, Chanthabouli District, Vientiane Capital"></div></div>
+<footer id="contact"><div class="wrap">
+  <div class="two">
+    <div>
+      <p data-t="ft_p">One Charge New Energy and Technology Sole Co., Ltd.<br>Ban Sibounheuang, Vientiane Capital, Lao PDR</p>
+    </div>
+    <div>
+      <h3 data-t="ct_h" style="color:#fff">Contact us</h3>
+      <p>📞 <a href="tel:+8562054250970">+856 20 5425 0970</a><br>
+      ✉️ <a href="mailto:Onechargenewtech@gmail.com">Onechargenewtech@gmail.com</a><br>
+      🌐 www.onechargenewtech.com<br>
+      📘 <a href="https://www.facebook.com/onechargeevlaos" target="_blank" rel="noopener">Facebook: OneChargeEV Laos</a></p>
+    </div>
+  </div>
+  <p class="small">© <span id="yr"></span> One Charge New Energy and Technology Sole Co., Ltd.</p>
+</div></footer>
+
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+/* ===== EDIT HERE: station list (from OneCharge admin page, 17 Nov 2026) ===== */
+const STATIONS = [{"n": "LEENA MOTOR (Nalao)", "a": "Vientiane Capital", "lat": 17.997179, "lng": 102.546587, "g": 4, "soon": false}, {"n": "Sisavath VT High School", "a": "Vientiane Capital", "lat": 17.97092, "lng": 102.6157, "g": 8, "soon": false}, {"n": "Soknoy SVP Oil", "a": "Vientiane Capital", "lat": 18.010616, "lng": 102.697422, "g": 4, "soon": false}, {"n": "Saphangmued SVP Oil", "a": "Vientiane Capital", "lat": 18.032166, "lng": 102.646157, "g": 4, "soon": false}, {"n": "Phonphanao SVP Oil", "a": "Vientiane Capital", "lat": 17.990206, "lng": 102.626532, "g": 4, "soon": false}, {"n": "Nongnieng Station", "a": "Vientiane Capital", "lat": 18.003975, "lng": 102.65901, "g": 4, "soon": false}, {"n": "Huakua Market", "a": "Vientiane Capital", "lat": 17.974607, "lng": 102.650603, "g": 4, "soon": false}, {"n": "Thanaleng SayFong 999 Market", "a": "Vientiane Capital", "lat": 17.8855, "lng": 102.715981, "g": 6, "soon": false}, {"n": "Northern Bus Station PV Oil", "a": "Vientiane Capital", "lat": 18.01025, "lng": 102.548335, "g": 4, "soon": false}, {"n": "Savannakhet (Kaysone)", "a": "Savannakhet", "lat": 16.541527, "lng": 104.763785, "g": 4, "soon": true}, {"n": "Thakhek Bus Station", "a": "Khammouane", "lat": 17.403825, "lng": 104.835065, "g": 4, "soon": false}, {"n": "Pakse Friendship Mall", "a": "Champasak", "lat": 15.117691, "lng": 105.820079, "g": 4, "soon": false}, {"n": "Sikhai (opposite Mazda)", "a": "Vientiane Capital", "lat": 17.981168, "lng": 102.55431, "g": 6, "soon": false}, {"n": "Nonghai TangLak Restaurant", "a": "Vientiane Capital", "lat": 17.918548, "lng": 102.650071, "g": 4, "soon": false}, {"n": "OneCharge EV Head Office", "a": "Vientiane Capital", "lat": 17.979664, "lng": 102.623034, "g": 2, "soon": false}, {"n": "NongTaeng SVP Oil", "a": "Vientiane Capital", "lat": 18.018574, "lng": 102.533343, "g": 4, "soon": false}, {"n": "Dongnasok AVA Cafe", "a": "Vientiane Capital", "lat": 17.995301, "lng": 102.587449, "g": 4, "soon": false}, {"n": "Road 13 South, km 19", "a": "Vientiane Capital", "lat": 18.075895, "lng": 102.739329, "g": 4, "soon": false}, {"n": "Highway entrance, Sinouk Coffee", "a": "Vientiane Capital", "lat": 18.029324, "lng": 102.546046, "g": 8, "soon": false}, {"n": "Sanjiang Sinopec", "a": "Vientiane Capital", "lat": 17.975746, "lng": 102.582988, "g": 6, "soon": false}, {"n": "Dongdok Doi Cafe 2", "a": "Vientiane Capital", "lat": 18.033433, "lng": 102.635066, "g": 6, "soon": false}, {"n": "Vang Vieng Chanmany Cafe", "a": "Vang Vieng (Vientiane Province)", "lat": 18.911436, "lng": 102.450099, "g": 6, "soon": false}, {"n": "Vientiane Railway Station (LCR)", "a": "Vientiane Capital", "lat": 18.026486, "lng": 102.681535, "g": 8, "soon": false}];
+
+/* ===== EDIT HERE: deals & promotions. Add / remove cards freely. ===== */
+const DEALS = [
+  {badge:{en:"Every day",lo:"ທຸກມື້",zh:"每天"}, big:"0 ₭", title:{en:"Free parking",lo:"ຈອດລົດຟຣີ",zh:"免费停车"},
+   text:{en:"Park free at every OneCharge EV station while you charge.",lo:"ຈອດລົດຟຣີ ທຸກສະຖານີ OneCharge EV ໃນຂະນະສາກ.",zh:"所有 OneCharge EV 充电站充电期间免费停车。"}},
+  {badge:{en:"Every day",lo:"ທຸກມື້",zh:"每天"}, big:"24/7", title:{en:"Always open",lo:"ເປີດ 24 ຊົ່ວໂມງ",zh:"24小时营业"},
+   text:{en:"Charge any time, day or night – all stations open 24 hours.",lo:"ສາກໄດ້ທຸກເວລາ ທັງກາງເວັນ ແລະ ກາງຄືນ.",zh:"全天候开放，随时充电。"}},
+  {badge:{en:"Best price",lo:"ລາຄາດີ",zh:"实惠价格"}, big:"2,999 ₭", title:{en:"Per kWh in Vientiane",lo:"ຕໍ່ kWh ໃນນະຄອນຫຼວງ",zh:"万象每度电"},
+   text:{en:"One clear price – electricity and service fee included. No hidden charges.",lo:"ລາຄາດຽວ ລວມຄ່າໄຟ ແລະ ຄ່າບໍລິການແລ້ວ.",zh:"一口价，含电费和服务费，无隐藏收费。"}}
+];
+
+const T = {
+lo:{nav_app:"ແອັບ",hero_b3:"ດາວໂຫຼດແອັບ",app_here:"ນີ້ແມ່ນແອັບຂອງພວກເຮົາ!",app_h:"ດາວໂຫຼດແອັບ OneCharge EV",app_p:"ສະແກນເລີຍ ເພື່ອດາວໂຫຼດແອັບຈາກ Store. ຊອກຫາຕູ້ສາກ, ເບິ່ງສະຖານະ, ເຕີມເງິນ ແລະ ເລີ່ມສາກ – ທັງໝົດຢູ່ໃນໂທລະສັບ.",app_tip:"📱 ໃຊ້ໂທລະສັບຢູ່ບໍ? ກົດປຸ່ມ Store ລຸ່ມ QR ໄດ້ເລີຍ.",nav_about:"ກ່ຽວກັບເຮົາ",nav_st:"ສະຖານີ",nav_deals:"ໂປຣໂມຊັນ",nav_future:"ແຜນການ",nav_partner:"ຮ່ວມມື",nav_contact:"ຕິດຕໍ່",
+hero_tag:"⚡ ເປີດ 24 ຊົ່ວໂມງ · ຈອດລົດຟຣີ",hero_h:"ສະຖານີສາກລົດໄຟຟ້າໄວ ທົ່ວປະເທດລາວ",hero_p:"OneCharge EV ສ້າງ ແລະ ດຳເນີນງານ ສະຖານີສາກໄວ DC ຢູ່ປໍ້ານ້ຳມັນ, ຮ້ານກາເຟ, ຕະຫຼາດ ແລະ ສະຖານີຂົນສົ່ງ – ໃຫ້ຜູ້ຂັບລົດໄຟຟ້າທຸກຄົນ ສາກໄດ້ຢ່າງໝັ້ນໃຈ.",hero_b1:"ຊອກຫາສະຖານີ",hero_b2:"ມາເປັນຄູ່ຮ່ວມມື",
+s1:"ສະຖານີເປີດໃຫ້ບໍລິການ",s2:"ຫົວສາກ",s3:"ຄັ້ງທີ່ສາກແລ້ວ",s4:"ແຂວງ",
+ab_h:"ກ່ຽວກັບ OneCharge EV",ab_p:"ບໍລິສັດ ວັນຊາດຈ໌ ພະລັງງານໃໝ່ ແລະ ເຕັກໂນໂລຊີ ຈຳກັດຜູ້ດຽວ ເປັນບໍລິສັດລາວ ຕັ້ງຢູ່ນະຄອນຫຼວງວຽງຈັນ. ເປົ້າໝາຍຂອງພວກເຮົາ ແມ່ນພະລັງງານສີຂຽວ ສຳລັບການຄົມມະນາຄົມ: ສະຖານີສາກລົດໄຟຟ້າໄວ ເພື່ອຊ່ວຍລາວ ຫັນຈາກນ້ຳມັນນຳເຂົ້າ ມາໃຊ້ໄຟຟ້າສະອາດ ທີ່ຜະລິດພາຍໃນປະເທດ.",
+ab_1:"ຕົວແທນຢ່າງເປັນທາງການໃນລາວ ຂອງ TELD New Energy ແລະ GAC Energy Technology",ab_2:"ແອັບ OneCharge EV ຂອງພວກເຮົາເອງ – ຊອກຫາ, ເຕີມເງິນ, ສາກ ແລະ ຈ່າຍ",ab_3:"ຊຳລະຜ່ານທະນາຄານລາວ: BCEL One ແລະ LDB",ab_4:"ທີມງານຂອງພວກເຮົາ ຕິດຕັ້ງ, ຕິດຕາມ ແລະ ບຳລຸງຮັກສາ ທຸກຕູ້ສາກ",
+wd_h:"ພວກເຮົາເຮັດຫຍັງ",wd_p:"ຈາກຕູ້ສາກດຽວຢູ່ຮ້ານກາເຟ ເຖິງສູນສາກຂະໜາດໃຫຍ່ – ພວກເຮົາດູແລເຕັກໂນໂລຊີທັງໝົດ.",
+w1h:"ສາກໄວສາທາລະນະ",w1p:"ຕູ້ສາກໄວ DC (120–160 kW ຕໍ່ຕູ້, ມາດຕະຖານ GB/T) ເປີດ 24 ຊົ່ວໂມງ.",w2h:"ແອັບ OneCharge EV",w2p:"ແຜນທີ່ສາກ, ສະຖານະຕູ້ສາກ, ເຕີມເງິນ, ປະຫວັດການສາກ – ພາສາລາວ, ອັງກິດ ແລະ ຈີນ.",w3h:"ຮ່ວມມືກັບສະຖານທີ່",w3p:"ຕິດຕັ້ງຕູ້ສາກຢູ່ປໍ້ານ້ຳມັນ, ຮ້ານກາເຟ, ຕະຫຼາດ, ໂຮງຮຽນ ແລະ ສະຖານີລົດເມ ແລະ ແບ່ງປັນລາຍຮັບກັບເຈົ້າຂອງສະຖານທີ່.",w4h:"ສູນສາກ",w4p:"ຕູ້ສາກ DC ແບບກຸ່ມ 240 kW ເຖິງ 960 kW, ສູງສຸດ 24 ຫົວສາກ ຈາກຕູ້ໄຟດຽວ.",w5h:"ສາກລົດເມ ແລະ ລົດບັນທຸກ",w5p:"ລະບົບສາກອັດຕະໂນມັດ 1 MW ສຳລັບລົດເມ ແລະ ລົດບັນທຸກໄຟຟ້າ.",w6h:"ຕິດຕັ້ງ ແລະ ບຳລຸງຮັກສາ",w6p:"ສຳຫຼວດສະຖານທີ່, ຂໍອະນຸຍາດໝໍ້ແປງ, ຕິດຕັ້ງ, ເຊື່ອມແອັບ ແລະ ບຳລຸງຮັກສາ.",
+st_h:"ສະຖານີຂອງພວກເຮົາ",st_p:"ທຸກສະຖານີເປີດ 24 ຊົ່ວໂມງ ແລະ ຈອດລົດຟຣີ. ກົດໝຸດເພື່ອນຳທາງ.",
+dl_h:"ໂປຣໂມຊັນ ແລະ ຂໍ້ສະເໜີ",dl_p:"ລາຄາງ່າຍ ແລະ ຍຸດຕິທຳ.",pr_a:"ພື້ນທີ່",pr_b:"ລາຄາຕໍ່ kWh",pr_c:"ລວມ",pr_1:"ນະຄອນຫຼວງວຽງຈັນ ແລະ ວັງວຽງ",pr_2:"ທ່າແຂກ, ປາກເຊ, ສະຫວັນນະເຂດ",pr_x:"ຄ່າໄຟ + ຄ່າບໍລິການ",
+fu_h:"ເປົ້າໝາຍຂອງພວກເຮົາ",fu_p:"ເປົ້າໝາຍ: 30 ສະຖານີ ໃນປີ 2026, ແລ້ວຂະຫຍາຍຕາມທາງຫຼວງຫຼັກ ທົ່ວປະເທດລາວ – ຈາກຊາຍແດນຈີນ ເຖິງພາກໃຕ້.",now:"ປັດຈຸບັນ",next:"ຕໍ່ໄປ",
+r1h:"ສະຖານີທຳອິດ",r1p:"ສະຖານີລົດໄຟວຽງຈັນ, ປໍ້າຊີໂນເປັກ ຊັ່ງຈຽງ, ດົງໂດກ, ທາງເຂົ້າທາງດ່ວນ, ວັງວຽງ.",r2h:"22 ສະຖານີເປີດແລ້ວ",r2p:"ວຽງຈັນ, ວັງວຽງ, ທ່າແຂກ ແລະ ປາກເຊ. ສະຫວັນນະເຂດ ເປີດເດືອນທັນວາ 2026.",r3h:"ພາກເໜືອ ແລະ ເສັ້ນທາງທ່ອງທ່ຽວ",r3p:"ຫຼວງພະບາງ, ຫຼວງນ້ຳທາ (ດ່ານບໍ່ເຕັນ) ແລະ ບໍ່ແກ້ວ.",r4h:"ສູນສາກ ແລະ ລົດກຸ່ມ",r4p:"ສະໜາມບິນສາກົນວັດໄຕ, ສູນສາກ ແລະ ສາກລົດເມ-ລົດບັນທຸກ.",
+pa_h:"ຕິດຕັ້ງຕູ້ສາກ ຢູ່ທຸລະກິດຂອງທ່ານ",pa_p:"ທ່ານມີປໍ້ານ້ຳມັນ, ຮ້ານກາເຟ, ໂຮງແຮມ, ຕະຫຼາດ ຫຼື ບ່ອນຈອດລົດບໍ? ຜູ້ຂັບລົດໄຟຟ້າ ຈະລໍຖ້າຢູ່ທຸລະກິດຂອງທ່ານ ລະຫວ່າງສາກ – ນັ້ນແມ່ນລູກຄ້າໃໝ່ຂອງທ່ານ. ເລືອກຮູບແບບທີ່ເໝາະກັບທ່ານ:",
+m1h:"ພວກເຮົາລົງທຶນຫຼາຍ",m1p:"OneCharge EV ຖື 80%. ພວກເຮົາສະໜອງຕູ້ສາກ, ແອັບ, ໃບອະນຸຍາດ, ຕິດຕັ້ງ ແລະ ບຳລຸງຮັກສາ. ທ່ານສະໜອງສະຖານທີ່.",m2h:"ລົງທຶນຮ່ວມກັນ",m2p:"ແບ່ງການລົງທຶນ ແລະ ແບ່ງລາຍຮັບເທົ່າກັນ. ພວກເຮົາດູແລເຕັກໂນໂລຊີ ແລະ ແອັບ.",m3h:"ເປັນຕົວແທນ",m3p:"ຊື້ຊຸດຕູ້ສາກຄົບຊຸດ ແລະ ເປັນເຈົ້າຂອງສະຖານີ. ພວກເຮົາເຊື່ອມຕໍ່ແອັບ ແລະ ດູແລໃຫ້.",pa_b:"ປຶກສາພວກເຮົາ",
+ft_p:"ບໍລິສັດ ວັນຊາດຈ໌ ພະລັງງານໃໝ່ ແລະ ເຕັກໂນໂລຊີ ຈຳກັດຜູ້ດຽວ<br>ບ້ານສີບຸນເຮືອງ, ນະຄອນຫຼວງວຽງຈັນ, ສປປ ລາວ",ct_h:"ຕິດຕໍ່ພວກເຮົາ",all:"ທັງໝົດ",dir:"ນຳທາງ",soon:"ເປີດໄວໆນີ້",plugs:"ຫົວສາກ",open:"ເປີດ 24 ຊມ",th_n:"ສະຖານີ",plugs_h:"ຫົວສາກ",th_s:"ສະຖານະ",th_d:"ແຜນທີ່ / ນຳທາງ"},
+zh:{nav_app:"应用",hero_b3:"下载应用",app_here:"这里！我们的应用",app_h:"下载 OneCharge EV 应用",app_p:"立即扫码，从应用商店下载。查找充电桩、查看实时状态、钱包充值、启动充电——手机一站搞定。",app_tip:"📱 正在用手机浏览？直接点击二维码下方的商店按钮。",nav_about:"关于我们",nav_st:"充电站",nav_deals:"优惠",nav_future:"发展计划",nav_partner:"合作",nav_contact:"联系",
+hero_tag:"⚡ 24小时营业 · 免费停车",hero_h:"覆盖老挝的电动车快充网络",hero_p:"OneCharge EV 在加油站、咖啡店、市场和交通枢纽建设并运营直流快充站，让老挝每一位电动车主安心充电。",hero_b1:"查找充电站",hero_b2:"成为合作伙伴",
+s1:"运营中的充电站",s2:"充电枪",s3:"累计充电次数",s4:"省份",
+ab_h:"关于 OneCharge EV",ab_p:"One Charge New Energy and Technology Sole Co., Ltd.是一家位于万象的老挝企业。我们的目标是交通绿色能源：建设快充站，帮助老挝从进口燃油转向本国生产的清洁电力。",
+ab_1:"特来电（TELD）与广汽能源（GAC Energy）在老挝的官方合作伙伴",ab_2:"自有 OneCharge EV 应用——找桩、充值、充电、支付",ab_3:"通过老挝银行支付：BCEL One 和 LDB",ab_4:"自有团队负责安装、监控和维护每台充电桩",
+wd_h:"我们的业务",wd_p:"从咖啡店的一台充电桩到大型充电枢纽，我们提供全套技术服务。",
+w1h:"公共快充",w1p:"直流快充桩（单台120–160 kW，国标 GB/T），24小时开放。",w2h:"OneCharge EV 应用",w2p:"充电地图、实时桩状态、钱包充值、充电记录——支持老挝语、英语、中文。",w3h:"场地合作",w3p:"在加油站、咖啡店、市场、学校和汽车站布设充电桩，与场地方分享收益。",w4h:"充电枢纽",w4p:"群充系统 240–960 kW，单个功率柜最多 24 个终端。",w5h:"公交和货车充电",w5p:"1 MW 自动充电系统，适用于电动公交和货运车队。",w6h:"安装与运维",w6p:"场地勘察、变压器报批、安装、接入应用及持续维护。",
+st_h:"我们的充电站",st_p:"所有站点24小时开放、免费停车。点击地图标记即可导航。",
+dl_h:"优惠活动",dl_p:"价格简单透明。",pr_a:"地区",pr_b:"每度电价格",pr_c:"包含",pr_1:"万象市和万荣",pr_2:"他曲、巴色、沙湾拿吉",pr_x:"电费 + 服务费",
+fu_h:"发展方向",fu_p:"目标：2026年达到30个充电站，随后覆盖老挝各条主干道——从中老边境到南部。",now:"现在",next:"下一步",
+r1h:"首批站点",r1p:"万象火车站、三江中石化、东都、高速入口、万荣。",r2h:"22 个站点运营中",r2p:"万象、万荣、他曲、巴色。沙湾拿吉站将于2026年12月开业。",r3h:"北部及旅游线路",r3p:"琅勃拉邦、南塔（磨丁口岸）和博胶。",r4h:"枢纽与车队",r4p:"瓦岱国际机场、充电枢纽、公交和货车充电。",
+pa_h:"在您的场地安装充电桩",pa_p:"您拥有加油站、咖啡店、酒店、市场或停车场吗？电动车主充电时会在您的场地等候——这就是您的新客户。选择适合您的合作模式：",
+m1h:"我们主要投资",m1p:"OneCharge EV 占 80%。我们提供充电桩、应用、审批、安装和维护，您提供场地。",m2h:"共同投资",m2p:"共同投资、收益平分。技术和应用仍由我们负责。",m3h:"成为代理",m3p:"购买整套充电设备，拥有自己的站点。我们负责接入应用并提供维护。",pa_b:"咨询场地合作",
+ft_p:"One Charge New Energy and Technology Sole Co., Ltd.<br>老挝万象市 Sibounheuang 村",ct_h:"联系我们",all:"全部",dir:"导航",soon:"即将开业",plugs:"充电枪",open:"24小时营业",th_n:"充电站",plugs_h:"充电枪",th_s:"状态",th_d:"地图 / 导航"},
+en:{all:"All",dir:"Directions",soon:"Opening Dec 2026",plugs:"plugs",open:"Open 24h",th_n:"Station",plugs_h:"Plugs",th_s:"Status",th_d:"Map / Directions"}
+};
+const EN={}; document.querySelectorAll("[data-t]").forEach(e=>EN[e.dataset.t]=e.innerHTML);
+let L="en"; try{L=localStorage.getItem("oc_lang")||"en"}catch(e){}
+const tr=k=>(T[L]&&T[L][k])||T.en[k]||EN[k]||k;
+const pick=o=>o[L]||o.en;
+
+let markers=[], area="all";
+const map=L_map();
+function L_map(){
+ /* Map: MapLibre (open source) + OpenFreeMap (free, no API key, commercial use OK). */
+ if(!window.maplibregl){ // library could not load -> simple Google Maps view (no key needed)
+  document.getElementById("map").style.display="none";const f=document.getElementById("mapfb");f.style.display="block";
+  f.src="https://maps.google.com/maps?q=OneCharge%20EV%20Vientiane&z=11&output=embed";return null}
+ const m=new maplibregl.Map({container:"map",style:"https://tiles.openfreemap.org/styles/liberty",center:[102.62,17.98],zoom:10.5,cooperativeGestures:true,attributionControl:{compact:true}});
+ m.addControl(new maplibregl.NavigationControl({showCompass:false}),"top-right");
+ return m}
+const gm=s=>`https://www.google.com/maps/dir/?api=1&destination=${s.lat},${s.lng}`;
+function drawStations(){
+ const areas=[...new Set(STATIONS.map(s=>s.a))];
+ document.getElementById("filters").innerHTML=["all",...areas].map(a=>`<button class="${a===area?"on":""}" data-a="${a}">${a==="all"?tr("all"):a}</button>`).join("");
+ document.querySelectorAll("#filters button").forEach(b=>b.onclick=()=>{area=b.dataset.a;drawStations()});
+ const list=STATIONS.filter(s=>area==="all"||s.a===area);
+ if(map){markers.forEach(m=>m.remove());
+  markers=list.map(s=>{const el=document.createElement("div");el.className="pin"+(s.soon?" soon":"");
+   return new maplibregl.Marker({element:el}).setLngLat([s.lng,s.lat])
+    .setPopup(new maplibregl.Popup({offset:14}).setHTML(`<b>${s.n}</b><br>${s.a}${s.soon?"<br><i>"+tr("soon")+"</i>":""}<br><a target="_blank" rel="noopener" href="${gm(s)}">${tr("dir")} →</a>`)).addTo(map)});
+  if(list.length){const b=new maplibregl.LngLatBounds();list.forEach(s=>b.extend([s.lng,s.lat]));map.fitBounds(b,{padding:50,maxZoom:14,duration:0})}}
+ const pinI='<svg viewBox="0 0 24 24"><path d="M12 2a7 7 0 0 0-7 7c0 5.2 7 13 7 13s7-7.8 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>';
+ const groups=[...new Set(list.map(s=>s.a))];let n=0;
+ const rows=groups.map(g=>`<tr class="grp"><td colspan="5">📍 ${g} (${list.filter(s=>s.a===g).length})</td></tr>`+
+   list.filter(s=>s.a===g).map(s=>`<tr><td class="c">${++n}</td><td><b>${s.n}</b></td><td class="c">${s.soon?"–":s.g}</td>
+   <td>${s.soon?`<span class="soonb">${tr("soon")}</span>`:`<span class="ok">● ${tr("open")}</span>`}</td>
+   <td class="c"><a class="dirbtn" target="_blank" rel="noopener" href="${gm(s)}" title="${tr("dir")}">${pinI}${tr("dir")}</a></td></tr>`).join("")).join("");
+ document.getElementById("list").innerHTML=`<div class="tblwrap"><table class="sttbl"><thead><tr><th class="c">#</th><th>${tr("th_n")}</th><th class="c">${tr("plugs_h")}</th><th>${tr("th_s")}</th><th class="c">${tr("th_d")}</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+function drawDeals(){document.getElementById("deallist").innerHTML=DEALS.map(d=>`<div class="deal"><span class="badge">${pick(d.badge)}</span><div class="big">${d.big}</div><h3>${pick(d.title)}</h3><p>${pick(d.text)}</p></div>`).join("")}
+function setLang(l){L=l;try{localStorage.setItem("oc_lang",l)}catch(e){}
+ document.documentElement.lang=l;document.querySelectorAll("[data-t]").forEach(e=>e.innerHTML=tr(e.dataset.t));
+ document.querySelectorAll(".lang button").forEach(b=>b.classList.toggle("on",b.dataset.l===l));drawStations();drawDeals()}
+document.querySelectorAll(".lang button").forEach(b=>b.onclick=()=>setLang(b.dataset.l));
+document.getElementById("yr").textContent=new Date().getFullYear();
+setLang(L);
+</script>
+</body>
+</html>
